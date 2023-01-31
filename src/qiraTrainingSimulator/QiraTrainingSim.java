@@ -1,9 +1,9 @@
-/*
- * Main File!
- */
+
+package qiraTrainingSimulator;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import qiraTrainingSimulator.Spells.*;
 
 public class QiraTrainingSim {
 
@@ -14,17 +14,14 @@ public class QiraTrainingSim {
         boolean alive = true;
         Creature monster;
         int monsterLevel = 0;
-        /*
-         *Creature Declaration! Probably gonna get so much more complex later on!
-         */
         ArrayList<Creature> monsterList = new ArrayList<>();
-        Creature yansur = new Creature(2,0,3,1,25,"Yansur");
-        Creature psychomancer = new Creature(1,6,1,2,35,"Psychomancer");
-        Creature gale = new Creature(3,2,0,7,45,"Gale");
-        Creature genesis = new Creature(12,0,3, 0,55,"Genesis-Revorse");
-        Creature judge = new Creature(2,6,3, 6,65,"Oceanic Judge");
-        Creature vanguard = new Creature(2,1,10, 4,75,"Solar Vanguard");
-        Creature qira = new Creature(11,6,10, 7,85,"Qira, Mistress of the Hive");
+        Creature yansur = new Creature(4,2,5,3,38,"Yansur");
+        Creature psychomancer = new Creature(4,8,2,4,51,"Psychomancer");
+        Creature gale = new Creature(6,5,1,9,87,"Gale");
+        Creature genesis = new Creature(15,2,7, 2,141,"Genesis-Revorse");
+        Creature judge = new Creature(6,10,7, 10,243,"Oceanic Judge");
+        Creature vanguard = new Creature(10,6,18, 7,375,"Solar Vanguard");
+        Creature qira = new Creature(13,12,13, 12,540,"Qira, Mistress of the Hive");
         monsterList.add(yansur);
         monsterList.add(psychomancer);
         monsterList.add(gale);
@@ -32,12 +29,21 @@ public class QiraTrainingSim {
         monsterList.add(judge);
         monsterList.add(vanguard);
         monsterList.add(qira);
-        /*
-         * Player creation. Might include classes later on for different ways of obtaining spells.
-         */
         Player character = new Player(0, 0, 0, 0, 0, 20, "Player", "Warrior");
+        Bash bash = new Bash();
+        Heal heal = new Heal();
+        Crit crit = new Crit();
+        Dodge dodge = new Dodge();
+        character.addSpell(bash);
+        character.addSpell(heal);
+        character.addSpell(crit);
+        character.addSpell(dodge);
+        yansur.addSpell(bash);
+        yansur.addSpell(heal);
+        yansur.addSpell(crit);
+        yansur.addSpell(dodge);
         System.out.println("Creating new: " + character.getName());
-        character.statBump(4);
+        character.statBump(4,false);
         character.maxHP = 20;
         character.currentHP = 20;
         System.out.println("Character Class: " + character.getJob());
@@ -50,9 +56,8 @@ public class QiraTrainingSim {
                     System.out.println("======================================");
                     System.out.println("HP: " + character.currentHP + "/" + character.maxHP + " MANA: " + character.mana + "/100");
                     System.out.println("Enemy Name: " + monster.getName() + " || Enemy HP: " + monster.getHP() + "/" + monster.getMaxHP());
-                    System.out.println("ATTACK || SPELLS || ITEMS || STALL");
+                    System.out.println("| ATTACK || SPELLS || ITEMS || STALL |");
                     System.out.println("======================================");
-                    System.out.print("Action: ");
                     String choice = sc.nextLine();
                     System.out.println("======================================");
                     if(choice.equalsIgnoreCase("attack")){
@@ -60,14 +65,14 @@ public class QiraTrainingSim {
                         break;
                     }else if(choice.equalsIgnoreCase("spell") || choice.equalsIgnoreCase("spells")){
                         character.spell(monster);
-                        if(character.found){
+                        if(character.found && character.cast){
                             break;
                         }
                     }else if(choice.equalsIgnoreCase("stall")){
                         System.out.println("You didn't do anything!");
                         break;
                     }else if(choice.equalsIgnoreCase("item") || choice.equalsIgnoreCase("items")){
-                        System.out.println("placeholder");
+                        System.out.println("Hi this system doesn't exist yet");
                         break;
                     }
                 }
@@ -79,7 +84,7 @@ public class QiraTrainingSim {
                     System.out.println("You have slain " + monster.name + " with "+ character.overkill + " points of overkill!");
                     break;
                 }
-                monster.attack(character);
+                monster.turn(character);
                 if(character.getHP() <= 0){
                     System.out.println("You were slain by " + monster.name + " with " + monster.overkill + " points of overkill!");
                     alive = false;
@@ -93,7 +98,7 @@ public class QiraTrainingSim {
                 break;
             }else{
                 monsterLevel++;
-                character.statBump((int)(monsterLevel*1.25) + 2);
+                character.statBump((int)(monsterLevel*1.25) + 2, true);
             }
         }
         if(alive){
