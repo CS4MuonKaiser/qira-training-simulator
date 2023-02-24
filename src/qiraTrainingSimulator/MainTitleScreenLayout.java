@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.border.EmptyBorder;
 
 public class MainTitleScreenLayout extends JFrame {    
-    private JLabel title, blank;
+    private JLabel title;
     private JButton newGame, continueGame, spellsCompendium, settings, exit;
     
     public MainTitleScreenLayout(){
