@@ -28,7 +28,6 @@ public class MainTitleScreenLayout extends JFrame {
         JPanel listPane = new JPanel();
         listPane.setLayout(new BoxLayout(listPane, BoxLayout.Y_AXIS));
         
-        title.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         title.setFont(new Font("Monospaced",Font.BOLD,70));
         title.setBorder(new EmptyBorder(175, 0, 70, 0));
         
