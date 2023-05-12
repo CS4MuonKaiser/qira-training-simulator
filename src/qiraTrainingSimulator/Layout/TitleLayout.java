@@ -1,9 +1,12 @@
 package qiraTrainingSimulator.Layout;
 
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.border.*;
+import qiraTrainingSimulator.Player;
 
 public class TitleLayout extends JFrame implements ActionListener{    
     private JLabel title, blank;
@@ -66,7 +69,9 @@ public class TitleLayout extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == newGame) {
             this.dispose();
-            new MapLayout();
+            Player character = new Player(0, 0, 0, 0, 0, 20, "Player", "Warrior");
+            character.statBump(2, true);
+            new MapLayout(character);
         } if (e.getSource() == inventory) {
             this.dispose();
             new InventoryLayout();
