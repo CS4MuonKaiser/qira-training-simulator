@@ -3,7 +3,9 @@ package qiraTrainingSimulator;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.JFrame;
 import qiraTrainingSimulator.Spells.*;
+import qiraTrainingSimulator.Layout.*;
 
 public class QiraTrainingSim {
 
@@ -11,6 +13,7 @@ public class QiraTrainingSim {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        JFrame window = new TitleLayout();
         boolean alive = true;
         Creature monster;
         int monsterLevel = 0;
@@ -43,7 +46,6 @@ public class QiraTrainingSim {
         yansur.addSpell(crit);
         yansur.addSpell(dodge);
         System.out.println("Creating new: " + character.getName());
-        character.statBump(4,false);
         character.maxHP = 20;
         character.currentHP = 20;
         System.out.println("Character Class: " + character.getJob());
@@ -61,7 +63,6 @@ public class QiraTrainingSim {
                     String choice = sc.nextLine();
                     System.out.println("======================================");
                     if(choice.equalsIgnoreCase("attack")){
-                        character.attack(monster);
                         break;
                     }else if(choice.equalsIgnoreCase("spell") || choice.equalsIgnoreCase("spells")){
                         character.spell(monster);
@@ -84,7 +85,6 @@ public class QiraTrainingSim {
                     System.out.println("You have slain " + monster.name + " with "+ character.overkill + " points of overkill!");
                     break;
                 }
-                monster.turn(character);
                 if(character.getHP() <= 0){
                     System.out.println("You were slain by " + monster.name + " with " + monster.overkill + " points of overkill!");
                     alive = false;
@@ -98,7 +98,6 @@ public class QiraTrainingSim {
                 break;
             }else{
                 monsterLevel++;
-                character.statBump((int)(monsterLevel*1.25) + 2, true);
             }
         }
         if(alive){
