@@ -2,6 +2,9 @@
 package qiraTrainingSimulator;
 
 import java.util.Scanner;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import qiraTrainingSimulator.Layout.*;
 import qiraTrainingSimulator.Spells.*;
 
 public class Player extends Creature{
@@ -43,38 +46,38 @@ public class Player extends Creature{
     public String getJob(){
         return job;
     }
+    public int getMana(){
+        return mana;
+    }
     @Override
     public void getStats(){
         System.out.println("STR " + STR + " || DEX " + DEX + " || INT " + INT + " || DEF " + DEF + " || AGI " + AGI);
     }
     
-    void statBump(int points,boolean heal){
+    public void statBump(int points,boolean heal){
+        JFrame window = new SkillLayout();
         Scanner sc = new Scanner(System.in);
         while(points>0){
-            maxHP = maxHP + (int)(2*points);
-            System.out.println("======================================");
-            System.out.println("Increase Stat (" + points + ") remaining");
-            System.out.println("STR " + STR + " || DEX " + DEX + " || INT " + INT + " || DEF " + DEF + " || AGI " + AGI);
-            System.out.println("======================================");
-            String temp = sc.nextLine();
-            switch(temp.toUpperCase()){
-                case "STR":
+            Object[] options = { "STR", "DEX", "INT", "DEF", "AGI"};
+            int temp = JOptionPane.showOptionDialog(null, "Increase Stat (" + points + ") remaining", "Level Up!", 0, 3, null, options, options[0]);
+            switch(temp){
+                case 0:
                     STR++;
                     points--;
                     break;
-                case "DEX":
+                case 1:
                     DEX++;
                     points--;
                     break;
-                case "INT":
+                case 2:
                     INT++;
                     points--;
                     break;
-                case "DEF":
+                case 3:
                     DEF++;
                     points--;
                     break;
-                case "AGI":
+                case 4:
                     AGI++;
                     points--;
                     break;
@@ -86,8 +89,7 @@ public class Player extends Creature{
         this.damage(-(int)(maxHP/3), this);
         }
     }
-    @Override
-    public void attack(Creature c){
+    public String attack(Creature c){
         int damage = (int )(Math.random()*((STR+10)-STR+1)+STR);
         int rand = (int )(Math.random()*101);
         if (rand <= 5+(DEX*5) || crit == true){
@@ -99,8 +101,8 @@ public class Player extends Creature{
             mana = 100;
         }
         damage = (int)(damage - (damage*(0.025*DEF)));
-        System.out.println("Attack dealt "+ damage + " damage to " + c.getName());
         c.damage(damage, this);
+        return("Attack dealt "+ damage + " damage to " + c.getName());
     }
     public void spell(Creature c){
         int i = 0;
