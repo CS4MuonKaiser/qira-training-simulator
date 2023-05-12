@@ -1,7 +1,7 @@
 package qiraTrainingSimulator;
 
 public abstract class Spell {
-    protected String name, description;
+    protected String name, description, temp;
     protected int manaCost;
     protected boolean beneficial;
     
@@ -17,5 +17,5 @@ public abstract class Spell {
     public String getDescription(){
         return description;
     }
-    public abstract void cast(Creature target, Creature Caster);
+    public abstract String cast(Creature target, Creature Caster);
 }
