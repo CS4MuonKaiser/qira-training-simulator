@@ -1,21 +1,30 @@
 package qiraTrainingSimulator.Layout;
 
+
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
+import qiraTrainingSimulator.*;
 
 public class BattleLayout extends JFrame implements ActionListener, MouseListener{
-    private JLabel map, enemyName, enemyHP, enemyIcon, playerName, playerHP, playerMana, playerIcon;
+    private JLabel map, enemyName, enemyHP, enemyIcon, playerName, playerHP, playerMana;
     private JButton attack, spells, items, stall, bash, crit, dodge, heal;
-    private JPanel centerPanel,mapPanel, enemyPanel, playerPanel, abilityPanel, spellsPanel, spellsContainer, enemyIPanel, playerIPanel, fillerPanel1, fillerPanel2, fillerPanel3, fillerPanel4;
+    private JPanel centerPanel,mapPanel, enemyPanel, playerPanel, abilityPanel, spellsPanel, spellsContainer, enemyIPanel, playerIPanel, fillerPanel1, fillerPanel2, fillerPanel3, fillerPanel4, infoLog;
+    private Player character;
+    private Creature monster;
     private CardLayout card;
+    private ArrayList<JLabel> console = new ArrayList<JLabel>();
     
-    public BattleLayout(){
+    public BattleLayout(Creature c, Player p){
         super("Battle!");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1920, 1080);
         this.setVisible(true);
         this.setLayout(new BorderLayout(10,10));
+        this.character = p;
+        this.monster = c;
         
         centerPanel = new JPanel();
         fillerPanel1 = new JPanel();
@@ -28,14 +37,13 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
         ImageIcon img;
         map = new JLabel("Map");
         
-        enemyName = new JLabel("T-Rex");
-        enemyHP = new JLabel("HP: 100/100");
+        enemyName = new JLabel(monster.getName());
+        enemyHP = new JLabel("HP:" + monster.getHP() + "/" + monster.getMaxHP());
         enemyIcon = new JLabel();
         
         playerName = new JLabel("You");
-        playerHP = new JLabel("50/50");
-        playerMana = new JLabel("100/100");
-        playerIcon = new JLabel();
+        playerHP = new JLabel("HP:" + character.getHP() + "/" + character.getMaxHP());
+        playerMana = new JLabel("HP:" + character.getMana() + "/100");
         
         attack = new JButton("Attack");
         attack.addActionListener(this);
@@ -76,6 +84,7 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
         enemyPanel.add(enemyIPanel);
         enemyPanel.add(enemyIcon);
         
+        infoLog = new JPanel();
         playerPanel = new JPanel();
         playerIPanel = new JPanel();
         playerPanel.setLayout(new GridLayout(1,2,10,10));
@@ -83,9 +92,7 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
         playerIPanel.add(playerName);
         playerIPanel.add(playerHP);
         playerIPanel.add(playerMana);
-        img = new ImageIcon(BattleLayout.class.getResource("man.png"));
-        playerIcon.setIcon(img);
-        playerPanel.add(playerIcon);
+        playerPanel.add(infoLog);
         playerPanel.add(playerIPanel);
         
         abilityPanel = new JPanel();
@@ -129,13 +136,26 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
         if (e.getSource() == spells) {
             card.next(spellsContainer);
         }
+        if (e.getSource() == attack){
+            String temp = character.attack(monster);
+            JLabel consoleLog = new JLabel(temp);
+            enemyHP.setText("HP:" + monster.getHP() + "/" + monster.getMaxHP());
+            if(monster.getHP()<=0){
+                character.statBump(2, false);
+                this.dispose();
+                new MapLayout(character);
+            }
+            console.add(consoleLog);
+            this.infoLog.add(consoleLog);
+            monster.turn(character);
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == map) {
             this.dispose();
-            new MapLayout();
+            new MapLayout(character);
         }
     }
 
