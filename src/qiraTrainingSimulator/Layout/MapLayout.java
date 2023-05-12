@@ -14,6 +14,7 @@ public class MapLayout extends JFrame implements ActionListener, KeyListener{
     private JButton back, battle;
     private JLabel room;
     private JPanel center, west, east, rooms;
+    private Player p;
     private int current, next, encounter0, encounter1, encounter2, encounter3, encounter4, encounter5, encounter6, encounter7, encounter8;
     
     public MapLayout(){
@@ -162,7 +163,8 @@ public class MapLayout extends JFrame implements ActionListener, KeyListener{
             new TitleLayout();
         } if (e.getSource() == battle) {
             this.dispose();
-            new BattleLayout();
+            Creature yansur = new Creature(4,2,5,3,38,"Yansur");
+            new BattleLayout(yansur, p);
         }
     }
 
