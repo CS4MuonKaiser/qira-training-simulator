@@ -1,11 +1,12 @@
 package qiraTrainingSimulator;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import qiraTrainingSimulator.Spells.*;
 
 public class Creature {
     protected int maxHP, currentHP, STR, DEX, DEF, AGI, overkill;
-    protected String name;
+    protected String name, temp;
     protected boolean dodge, crit, found, cast;
     protected ArrayList<Spell> spellList = new ArrayList<>();
     public Creature(int sr, int dx, int df, int ai, int hp, String name){
@@ -56,24 +57,25 @@ public class Creature {
     public void goCrit(){
         crit = true;
     }
-    public void damage(int i, Creature c){
+    public String damage(int i, Creature c){
         int rand = (int)(Math.random()*101);
         if(!(rand <= (AGI*5) || dodge) || currentHP-i > currentHP){
+            currentHP = currentHP - i;
             if(currentHP-i <=0){
                 c.overkill = c.overkill - (currentHP-i);
             }else if(currentHP-i > currentHP){
-                System.out.println(this.getName() + " healed " + -i + " points of HP!");
+                return(this.getName() + " healed " + -i + " points of HP!");
             }
-            currentHP = currentHP - i;
         }else{
-            System.out.println(this.getName() + " dodged the attack!");
             dodge = false;
+            return(this.getName() + " dodged the attack!");
         }
         if(currentHP >= maxHP){
             currentHP = maxHP;
         }else if(currentHP <= 0){
             currentHP = 0;
         }
+        return(null);
     }
     
     public boolean hasSpell(String n){
@@ -91,7 +93,7 @@ public class Creature {
     public void addSpell(Spell s){
         spellList.add(s);
     }
-    public void attack(Creature c){
+    public String attack(Creature c){
         int damage = (int )(Math.random()*((STR+10)-STR+1)+STR);
         int rand = (int )(Math.random()*101);
         if (rand <= 5+(DEX*4) || crit){
@@ -100,60 +102,61 @@ public class Creature {
         }
         damage = (int)(damage - (damage*(0.025*c.getDef())));
         c.damage(damage, this);
-        System.out.println("Attack dealt "+ damage + " damage to " + c.name + "!");
+        return("Attack dealt "+ damage + " damage to " + c.name + "!");
     }
-    public void turn(Creature c){
+    public String turn(Creature c){
         int choice = (int)(Math.random()*5);
         if(getCrit()){
             attack(c);
         }else{
             switch(choice){
                 case 1:
-                    attack(c);
+                    temp = attack(c);
                     break;
                 case 2:
                     if(spellList.get(0) != null){
-                        spell(c,spellList.get(0));
+                        temp = spell(c,spellList.get(0));
                     }else{
-                        attack(c);
+                        temp =attack(c);
                     }
                     break;
                 case 3:
                     if(!(spellList.get(1) == null)){
-                        spell(c,spellList.get(1));
+                        temp =spell(c,spellList.get(1));
                     }else{
-                        attack(c);
+                        temp = attack(c);
                     }
                     break;
                 case 4:
                     if(!(spellList.get(2) == null)){
-                        spell(c,spellList.get(2));
+                        temp = spell(c,spellList.get(2));
                     }else{
-                        attack(c);
+                        temp = attack(c);
                     }
                     break;
                 case 5:
                     if(!(spellList.get(3) == null)){
-                        spell(c,spellList.get(3));
+                        temp = spell(c,spellList.get(3));
                     }else{
-                        attack(c);
+                        temp =attack(c);
                     }
                     break;
                 default:
-                    attack(c);
+                    temp = attack(c);
                     break;
             }
         }
-        
+        return(temp);
     }
-    public void spell(Creature c, Spell s){
+    public String spell(Creature c, Spell s){
         if(s.getBenefit()){
-            s.cast(this, this);
+            temp = s.cast(this, this);
             found = true;
         }else{
-            s.cast(c, this);
+            temp = s.cast(c, this);
             found = true;
         }
+        return(temp);
     }
     public void spell(Creature c, String n){
         found = false;
