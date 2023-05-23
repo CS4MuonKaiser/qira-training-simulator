@@ -131,6 +131,7 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == items) {
             this.dispose();
+            new InventoryLayout();
         }
         if (e.getSource() == spells) {
             card.next(spellsContainer);
@@ -142,11 +143,19 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
             if(monster.getHP()<=0){
                 character.statBump(2, false);
                 this.dispose();
-                new MapLayout();
+                new MapLayout(character);
             }
             console.add(consoleLog);
             this.infoLog.add(consoleLog);
-            monster.turn(character);
+            this.infoLog.add(consoleLog);
+            temp = monster.turn(character);
+            consoleLog.setText(temp);
+            this.infoLog.add(consoleLog);
+            playerHP.setText("HP:" + character.getHP() + "/" + character.getMaxHP());
+            if(character.getHP()<=0){
+                this.dispose();
+                new MapLayout(character);
+            }
         }
     }
 
@@ -154,7 +163,7 @@ public class BattleLayout extends JFrame implements ActionListener, MouseListene
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == map) {
             this.dispose();
-            new MapLayout();
+            new MapLayout(character);
         }
     }
 
