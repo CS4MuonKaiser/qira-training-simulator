@@ -163,6 +163,14 @@ public class MapLayout extends JFrame implements ActionListener, KeyListener{
         } if (e.getSource() == battle) {
             this.dispose();
             Creature yansur = new Creature(4,2,5,3,38,"Yansur");
+            Bash bash = new Bash();
+            Heal heal = new Heal();
+            Crit crit = new Crit();
+            Dodge dodge = new Dodge();
+            yansur.addSpell(bash);
+            yansur.addSpell(heal);
+            yansur.addSpell(crit);
+            yansur.addSpell(dodge);
             new BattleLayout(yansur, p);
         }
     }
