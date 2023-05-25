@@ -1,1 +1,0 @@
-# qira-training-simulator
